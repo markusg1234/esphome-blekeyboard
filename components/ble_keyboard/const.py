@@ -40,6 +40,7 @@ CONF_RECONNECT: Final = "reconnect"
 CONF_ADVERTISE_ON_START: Final = "advertise_on_start"
 CONF_BUTTONS: Final = "buttons"
 CONF_USE_DEFAULT_LIBS: Final = "use_default_libs"
+CONF_PAIRING_CODE: Final = "pairing_code"
 
 COMPONENT_CLASS: Final = "Esp32BleKeyboard"
 COMPONENT_NUMBER_CLASS: Final = "Esp32BleKeyboardNumber"

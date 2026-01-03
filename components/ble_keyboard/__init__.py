@@ -45,6 +45,7 @@ from .const import (
     CONF_ADVERTISE_ON_START,
     CONF_TEXT,
     CONF_USE_DEFAULT_LIBS,
+    CONF_PAIRING_CODE,
     DOMAIN,
     LIBS_ADDITIONAL,
     LIBS_DEFAULT,
@@ -70,6 +71,7 @@ CONFIG_SCHEMA: Final = cv.Schema(
         cv.Optional(CONF_ADVERTISE_ON_START, default=True): cv.boolean,
         cv.Optional(CONF_USE_DEFAULT_LIBS, default=False): cv.boolean,
         cv.Optional(CONF_BUTTONS, default=True): cv.boolean,
+        cv.Optional(CONF_PAIRING_CODE, default=123456): cv.int_range(min=0, max=999999),
     }
 )
 
@@ -93,6 +95,7 @@ async def to_code(config: dict) -> None:
         config[CONF_BATTERY_LEVEL],
         config[CONF_RECONNECT],
         config[CONF_ADVERTISE_ON_START],
+        config[CONF_PAIRING_CODE],
     )
 
     await cg.register_component(var, config)

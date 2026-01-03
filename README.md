@@ -52,7 +52,18 @@ Custom [esphome](https://esphome.io/) component to implement a virtual BLE keybo
 
 ```yaml
 external_components:
-  - source: github://dmamontov/esphome-blekeyboard
+  - source: github://zachdekoning/esphome-blekeyboard
+```
+
+### Enable BT support (required for ESPHome 2025.10+)
+As of ESPHome 2025.10+ onwards, you must manually enable 'CONFIG_BT_ENABLED' in the framework sdkconfig_options 
+
+```yaml
+framework:
+  type: arduino
+  version: latest
+  sdkconfig_options:
+    CONFIG_BT_ENABLED: "y"
 ```
 
 ### Configuration
@@ -67,6 +78,7 @@ ble_keyboard:
   advertise_on_start: true
   buttons: true
   use_default_libs: false
+  pairing_code: 123456
 ```
 
 * **id** (Optional, string): Component ID. Needed for action;
@@ -77,6 +89,7 @@ ble_keyboard:
 * **advertise_on_start** (Optional, bool): Automatic advertisement when the ESP device starts. (default: true);
 * **buttons** (Optional, bool): Whether to add separate buttons for [keys](https://github.com/dmamontov/esphome-blekeyboard/wiki/Keys) (default: true);
 * **use_default_libs** (Optional, bool): Whether to use the arduino standard library. (default: false).
+* **pairing_code** (Optional, int): The pairing code required to be entered on the connecting device. (default: 123456).
 
 #### Controlling keyboard availability when `advertise_on_start` is `False`
 

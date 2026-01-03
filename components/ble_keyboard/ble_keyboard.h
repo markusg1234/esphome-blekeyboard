@@ -13,10 +13,11 @@ namespace ble_keyboard {
 class Esp32BleKeyboard : public PollingComponent {
  public:
   Esp32BleKeyboard(std::string name, std::string manufacturer_id, uint8_t battery_level, bool reconnect,
-                   bool advertise_on_start)
+                   bool advertise_on_start, uint32_t pairing_code)
       : PollingComponent(1000), bleKeyboard(name, manufacturer_id, battery_level) {
     reconnect_ = reconnect;
     advertise_on_start_ = advertise_on_start;
+    pairing_code_ = pairing_code;
   }
 
   void setup() override;
@@ -51,6 +52,7 @@ class Esp32BleKeyboard : public PollingComponent {
   bool setup_{false};
   bool reconnect_{true};
   bool advertise_on_start_{true};
+  uint32_t pairing_code_{123456};
   uint32_t default_delay_{100};
   uint32_t release_delay_{8};
 };
