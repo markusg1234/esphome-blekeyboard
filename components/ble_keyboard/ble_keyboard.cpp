@@ -20,32 +20,16 @@ void Esp32BleKeyboard::setup() {
     return;
   }
 
-  ESP_LOGCONFIG(TAG, "Setting up BLE keyboard...");
+  ESP_LOGI(TAG, "Setting up BLE Keyboard component (no direct BLE init) ...");
+  // ESPHome 2026.x handles Bluetooth stack initialization.
+  // Do NOT call bleKeyboard.begin() or NimBLEDevice::init() here.
 
-  bleKeyboard.begin();
+  // Only use BLE functions after ESPHome has initialized Bluetooth.
+  // If you need to reference BLE server, do so after ESPHome setup.
 
-  // Set security settings for bonding so phones/tablets will properly reconnect on device reboot
-  NimBLEDevice::setSecurityAuth(true, true, true);
-  NimBLEDevice::setSecurityPasskey(this->pairing_code_);
-  NimBLEDevice::setSecurityIOCap(BLE_HS_IO_DISPLAY_ONLY);
-  NimBLEDevice::setSecurityInitKey(3);
-
-  // Set BLE Tx power to max to prevent disconnects
-  NimBLEDevice::setPower(ESP_PWR_LVL_P9, NimBLETxPowerType::All);
-
-  pServer = BLEDevice::getServer();
-
-  ESP_LOGCONFIG(TAG, "advertiseOnDisconnect(%s)", this->reconnect_ ? "true" : "false");
-  pServer->advertiseOnDisconnect(this->reconnect_);
-
-  if (!this->advertise_on_start_) {
-    ESP_LOGCONFIG(TAG, "stopAdvertising() because advertise_on_start is false");
-    pServer->stopAdvertising();
-  }
+  // Optionally, add any BLE Keyboard setup logic here that does NOT initialize the stack.
 
   bleKeyboard.releaseAll();
-  this->setup_ = true;
-  ESP_LOGCONFIG(TAG, "Finished setting up up BLE keyboard.");
 }
 
 void Esp32BleKeyboard::stop() {
@@ -61,24 +45,16 @@ void Esp32BleKeyboard::stop() {
   }
 
   std::vector<uint16_t> ids = pServer->getPeerDevices();
+    ESP_LOGI(TAG, "Setting up BLE Keyboard component (no direct BLE init)...");
+    // ESPHome 2026.x handles Bluetooth stack initialization.
+    // Do NOT call bleKeyboard.begin() or NimBLEDevice::init() here.
 
-  if (ids.size() > 0) {
-    for (uint16_t &id : ids) {
-      pServer->disconnect(id);
-    }
-  } else {
-    pServer->stopAdvertising();
-  }
-}
+    // Only use BLE functions after ESPHome has initialized Bluetooth.
+    // If you need to reference BLE server, do so after ESPHome setup.
 
-void Esp32BleKeyboard::start() {
-  if (!this->setup_) {
-    ESP_LOGW(TAG, "Attempting to use without setup.  Not doing anything.");
-    return;
-  }
-  ESP_LOGD(TAG, "start()");
-  if (this->reconnect_) {
-    ESP_LOGD(TAG, "advertiseOnDisconnect(true)");
+    // Optionally, add any BLE Keyboard setup logic here that does NOT initialize the stack.
+
+    bleKeyboard.releaseAll();
     pServer->advertiseOnDisconnect(true);
   }
 
