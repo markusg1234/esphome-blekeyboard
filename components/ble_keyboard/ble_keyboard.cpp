@@ -20,9 +20,9 @@ void Esp32BleKeyboard::setup() {
     return;
   }
   ESP_LOGI(TAG, "Setting up BLE Keyboard component (no direct BLE init) ...");
-  ESP_LOGI(TAG, "BLE Keyboard name: %s", bleKeyboard.getName().c_str());
-  ESP_LOGI(TAG, "BLE Manufacturer: %s", bleKeyboard.getManufacturer().c_str());
-  ESP_LOGI(TAG, "BLE Battery Level: %d", bleKeyboard.getBatteryLevel());
+  ESP_LOGI(TAG, "BLE Keyboard name: %s", name.c_str());
+  ESP_LOGI(TAG, "BLE Manufacturer: %s", manufacturer_id.c_str());
+  ESP_LOGI(TAG, "BLE Battery Level: %d", battery_level);
   ESP_LOGI(TAG, "BLE Pairing Code: %u", pairing_code_);
   ESP_LOGI(TAG, "BLE Advertising on start: %s", advertise_on_start_ ? "true" : "false");
   ESP_LOGI(TAG, "BLE Reconnect: %s", reconnect_ ? "true" : "false");
