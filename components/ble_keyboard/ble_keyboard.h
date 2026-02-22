@@ -14,7 +14,8 @@ class Esp32BleKeyboard : public PollingComponent {
  public:
   Esp32BleKeyboard(std::string name, std::string manufacturer_id, uint8_t battery_level, bool reconnect,
                    bool advertise_on_start, uint32_t pairing_code)
-      : PollingComponent(1000), bleKeyboard(name, manufacturer_id, battery_level) {
+      : PollingComponent(1000), bleKeyboard(name, manufacturer_id, battery_level),
+        name_(name), manufacturer_id_(manufacturer_id), battery_level_(battery_level) {
     reconnect_ = reconnect;
     advertise_on_start_ = advertise_on_start;
     pairing_code_ = pairing_code;
@@ -41,6 +42,9 @@ class Esp32BleKeyboard : public PollingComponent {
 
  protected:
   binary_sensor::BinarySensor *state_sensor_;
+  std::string name_;
+  std::string manufacturer_id_;
+  uint8_t battery_level_;
 
  private:
   bool is_connected();
