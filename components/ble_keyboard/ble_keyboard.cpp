@@ -35,8 +35,8 @@ void Esp32BleKeyboard::setup() {
   // bleKeyboard.setManufacturer("ESPHome");
   // Release all keys to start clean
   bleKeyboard.releaseAll();
-  ESP_LOGI(TAG, "Starting BLE advertising...");
-  bleKeyboard.begin();
+  ESP_LOGI(TAG, "Starting BLE advertising... (handled by ESPHome)");
+  // bleKeyboard.begin() must NOT be called here; ESPHome manages BLE initialization.
   this->setup_ = true;
 }
 
