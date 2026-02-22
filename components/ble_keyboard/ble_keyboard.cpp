@@ -24,9 +24,11 @@ void Esp32BleKeyboard::setup() {
   // Do NOT call bleKeyboard.begin() or NimBLEDevice::init() here.
   bleKeyboard.releaseAll();
   this->setup_ = true;
-  if (advertise_on_start_ && pServer) {
-    pServer->startAdvertising();
-  }
+
+  // Force HID keyboard advertising for Windows compatibility
+  bleKeyboard.setHIDDeviceType(BleKeyboardDeviceType::KEYBOARD);
+  bleKeyboard.startAdvertising();
+  ESP_LOGI(TAG, "Forced HID keyboard advertising for Windows.");
 }
 
 void Esp32BleKeyboard::stop() {
