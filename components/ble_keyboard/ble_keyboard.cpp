@@ -30,7 +30,7 @@ void Esp32BleKeyboard::setup() {
   ESP_LOGI(TAG, "BLE Default Delay: %u", default_delay_);
   // ESPHome 2026.x handles Bluetooth stack initialization.
   // Set a custom device name for easier discovery
-  bleKeyboard.setName("ESP32-BLE-KEYBOARD");
+  bleKeyboard.setName("ESP32KB");
   // Optionally set manufacturer (uncomment if needed)
   // bleKeyboard.setManufacturer("ESPHome");
   // Release all keys to start clean
