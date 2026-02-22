@@ -19,17 +19,14 @@ void Esp32BleKeyboard::setup() {
     ESP_LOGW(TAG, "BLE keyboard already setup.");
     return;
   }
-
   ESP_LOGI(TAG, "Setting up BLE Keyboard component (no direct BLE init) ...");
   // ESPHome 2026.x handles Bluetooth stack initialization.
   // Do NOT call bleKeyboard.begin() or NimBLEDevice::init() here.
-
-  // Only use BLE functions after ESPHome has initialized Bluetooth.
-  // If you need to reference BLE server, do so after ESPHome setup.
-
-  // Optionally, add any BLE Keyboard setup logic here that does NOT initialize the stack.
-
   bleKeyboard.releaseAll();
+  this->setup_ = true;
+  if (advertise_on_start_ && pServer) {
+    pServer->startAdvertising();
+  }
 }
 
 void Esp32BleKeyboard::stop() {
@@ -37,39 +34,25 @@ void Esp32BleKeyboard::stop() {
     ESP_LOGW(TAG, "Attempting to use without setup.  Not doing anything.");
     return;
   }
-
   ESP_LOGD(TAG, "stop()");
-  if (this->reconnect_) {
+  if (this->reconnect_ && pServer) {
     ESP_LOGD(TAG, "advertiseOnDisconnect(false)");
     pServer->advertiseOnDisconnect(false);
   }
-
-  std::vector<uint16_t> ids = pServer->getPeerDevices();
-    ESP_LOGI(TAG, "Setting up BLE Keyboard component (no direct BLE init)...");
-    // ESPHome 2026.x handles Bluetooth stack initialization.
-    // Do NOT call bleKeyboard.begin() or NimBLEDevice::init() here.
-
-    // Only use BLE functions after ESPHome has initialized Bluetooth.
-    // If you need to reference BLE server, do so after ESPHome setup.
-
-    // Optionally, add any BLE Keyboard setup logic here that does NOT initialize the stack.
-
-    bleKeyboard.releaseAll();
-    pServer->advertiseOnDisconnect(true);
-  }
-
-  pServer->startAdvertising();
+  bleKeyboard.releaseAll();
 }
 
-void Esp32BleKeyboard::update() { state_sensor_->publish_state(bleKeyboard.isConnected()); }
+void Esp32BleKeyboard::update() {
+  if (state_sensor_) {
+    state_sensor_->publish_state(this->is_connected());
+  }
+}
 
 bool Esp32BleKeyboard::is_connected() {
   if (!bleKeyboard.isConnected()) {
     ESP_LOGI(TAG, "Disconnected");
-
     return false;
   }
-
   return true;
 }
 
@@ -87,13 +70,10 @@ void Esp32BleKeyboard::press(std::string message) {
     if (message.length() >= 5) {
       for (unsigned i = 0; i < message.length(); i += 5) {
         bleKeyboard.print(message.substr(i, 5).c_str());
-
         delay(default_delay_);
       }
-
       return;
     }
-
     bleKeyboard.print(message.c_str());
   }
 }
@@ -107,7 +87,6 @@ void Esp32BleKeyboard::press(uint8_t key, bool with_timer) {
     if (with_timer) {
       this->update_timer();
     }
-
     bleKeyboard.press(key);
   }
 }
