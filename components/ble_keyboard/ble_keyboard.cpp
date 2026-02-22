@@ -21,7 +21,11 @@ void Esp32BleKeyboard::setup() {
   }
   ESP_LOGI(TAG, "Setting up BLE Keyboard component (no direct BLE init) ...");
   // ESPHome 2026.x handles Bluetooth stack initialization.
-  // Do NOT call bleKeyboard.begin() or NimBLEDevice::init() here.
+  // Set a custom device name for easier discovery
+  bleKeyboard.setName("ESP32-BLE-KEYBOARD");
+  // Optionally set manufacturer (uncomment if needed)
+  // bleKeyboard.setManufacturer("ESPHome");
+  // Release all keys to start clean
   bleKeyboard.releaseAll();
   this->setup_ = true;
 }
