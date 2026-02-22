@@ -20,6 +20,14 @@ void Esp32BleKeyboard::setup() {
     return;
   }
   ESP_LOGI(TAG, "Setting up BLE Keyboard component (no direct BLE init) ...");
+  ESP_LOGI(TAG, "BLE Keyboard name: %s", bleKeyboard.getName().c_str());
+  ESP_LOGI(TAG, "BLE Manufacturer: %s", bleKeyboard.getManufacturer().c_str());
+  ESP_LOGI(TAG, "BLE Battery Level: %d", bleKeyboard.getBatteryLevel());
+  ESP_LOGI(TAG, "BLE Pairing Code: %u", pairing_code_);
+  ESP_LOGI(TAG, "BLE Advertising on start: %s", advertise_on_start_ ? "true" : "false");
+  ESP_LOGI(TAG, "BLE Reconnect: %s", reconnect_ ? "true" : "false");
+  ESP_LOGI(TAG, "BLE Release Delay: %u", release_delay_);
+  ESP_LOGI(TAG, "BLE Default Delay: %u", default_delay_);
   // ESPHome 2026.x handles Bluetooth stack initialization.
   // Set a custom device name for easier discovery
   bleKeyboard.setName("ESP32-BLE-KEYBOARD");
@@ -50,11 +58,9 @@ void Esp32BleKeyboard::update() {
 }
 
 bool Esp32BleKeyboard::is_connected() {
-  if (!bleKeyboard.isConnected()) {
-    ESP_LOGI(TAG, "Disconnected");
-    return false;
-  }
-  return true;
+  bool connected = bleKeyboard.isConnected();
+  ESP_LOGD(TAG, "BLE Keyboard connection state: %s", connected ? "connected" : "disconnected");
+  return connected;
 }
 
 void Esp32BleKeyboard::update_timer() {
